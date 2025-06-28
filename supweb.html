@@ -7,34 +7,22 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #f8ffae 0%, #43c6ac 100%);
+            background: linear-gradient(135deg, #245473 0%, #43c6ac 100%);
             margin: 0;
             padding: 0;
         }
         .container {
             max-width: 1100px;
             margin: 40px auto;
-            background: #ffeaea; /* Soft red for canvas */
+            background: #A62205; /* Soft red for canvas */
             border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(21,101,192,0.07);
             padding: 40px;
             color: #11235A; /* Navy blue for all text in container */
+            display: block;
         }
         h1, h2, th, td, p, ul, li, table {
             color: #11235A;
-        }
-        .gallery {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        .gallery img {
-            width: 180px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
         }
         .section {
             margin-bottom: 35px;
@@ -66,59 +54,18 @@
         button:hover {
             background-color: #0056b3;
         }
-    </style>
-    <style>
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: auto;
-            background: rgba(0,0,0,0.7);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            position: relative;
-            background: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .modal-img {
-            max-width: 80vw;
-            max-height: 70vh;
-            border-radius: 8px;
-            transition: transform 0.2s;
-        }
-        .close-btn {
-            position: absolute;
-            top: 12px;
-            right: 18px;
-            background: #ff5f57;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-            transition: background 0.2s;
-        }
-        .close-btn:hover {
-            background: #bf4943;
+        header {
+            width:100%;
+            background:#e3f2fd;
+            color:#1565c0;
+            padding:22px 0 16px 0;
+            font-size:2.1rem;
+            font-weight:bold;
+            letter-spacing:1px;
+            text-align:center;
+            border-bottom:1px solid #b3e5fc;
+            margin-bottom:30px;
+            box-shadow:0 2px 8px rgba(21,101,192,0.07);
         }
     </style>
     <script>
@@ -133,72 +80,44 @@
                 if (icon) icon.textContent = '▼';
             }
         }
-
-        // Modal logic
-        function openModal(src, alt) {
-            const modal = document.getElementById('imgModal');
-            const modalImg = document.getElementById('modalImg');
-            modal.style.display = 'flex';
-            modalImg.src = src;
-            modalImg.alt = alt;
-        }
-        function closeModal() {
-            document.getElementById('imgModal').style.display = 'none';
-        }
-        window.onclick = function(event) {
-            var modal = document.getElementById('imgModal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        }
     </script>
 </head>
 <body>
+    <header>
+        Supriya Mandal's Portfolio
+    </header>
     <div class="container">
         <h1>Welcome to Supriya Mandal's Personal Homepage</h1>
         <p>Hello, and thank you for visiting my page. Here you can learn more about me, see some of my favorite moments, and explore my background.</p>
 
         <div class="section">
-            <button onclick="toggleSection('gallery', this)">Gallery <span class="dropdown-icon">▼</span></button>
-            <div class="gallery" id="gallery" style="display:none;">
-                <img src="../bg.png" alt="" onclick="openModal(this.src, '')">
-                <img src="../bird.png" alt="" onclick="openModal(this.src, '')">
-                <img src="../Sup_imaage.JPG" alt="" onclick="openModal(this.src, '')">
-                <img src="../pipeNorth.png" alt="" onclick="openModal(this.src, '')">
-                <img src="../pipeSouth.png" alt="" onclick="openModal(this.src, '')">
-            </div>
-        </div>
-        <!-- Modal for image zoom -->
-        <div id="imgModal" class="modal">
-            <div class="modal-content">
-                <button class="close-btn" onclick="closeModal()" title="Close">&#10005;</button>
-                <img id="modalImg" class="modal-img" src="" alt="">
-            </div>
-        </div>
-
-        <div class="section">
             <button onclick="toggleSection('education', this)">Academic Qualification <span class="dropdown-icon">▼</span></button>
             <div id="education" style="display:none;">
-                <table>
-                    <tr>
-                        <th>Degree</th>
-                        <th>Subject</th>
-                        <th>Institution</th>
-                        <th>Year</th>
-                    </tr>
-                    <tr>
-                        <td>Bachelor of Science</td>
-                        <td>Mathematics</td>
-                        <td>Presidency University, Kolkata</td>
-                        <td>2022</td>
-                    </tr>
-                    <tr>
-                        <td>Master of Science</td>
-                        <td>Mathematics</td>
-                        <td>IIT Bombay</td>
-                        <td>2024</td>
-                    </tr>
-                </table>
+                <div style="margin-bottom:18px; margin-left:30px;">
+                    <button onclick="toggleSection('education-details', this)" type="button" style="background:#e3f2fd; color:#1565c0; border:1px solid #90caf9; font-weight:bold; margin-bottom:8px; border-radius:6px; padding:7px 18px; box-shadow:0 1px 3px rgba(21,101,192,0.07);">Education <span class="dropdown-icon">▼</span></button>
+                    <div id="education-details" style="display:none; margin-left:22px;">
+                        <ul style="list-style-type: disc;">
+                            <li style="margin-bottom: 1em;"><strong>M.Sc. in Mathematics</strong><br>
+                                Indian Institute of Technology (IIT) Bombay, India<br>
+                                Jul 2022 – May 2024
+                            </li>
+                            <li style="margin-bottom: 1em;"><strong>B.Sc. in Mathematics</strong><br>
+                                Presidency University, Kolkata<br>
+                                Aug 2019 – Jun 2022
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="margin-left:30px;">
+                    <button onclick="toggleSection('achievements', this)" type="button" style="background:#e3f2fd; color:#1565c0; border:1px solid #90caf9; font-weight:bold; margin-bottom:8px; border-radius:6px; padding:7px 18px; box-shadow:0 1px 3px rgba(21,101,192,0.07);">Achievements <span class="dropdown-icon">▼</span></button>
+                    <div id="achievements" style="display:none; margin-left:22px;">
+                        <ul style="list-style-type: disc;">
+                            <li style="margin-bottom: 1em;"><strong>Dr. P. V. Sukhatme Memorial Award</strong><br>
+                                IIT Bombay (2024)
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -206,7 +125,7 @@
             <button onclick="toggleSection('work', this)">Work Experience <span class="dropdown-icon">▼</span></button>
             <div id="work" style="display:none;">
                 <ul>
-                    <li><strong>Mathematics Analyst</strong> at Tech Solutions (2022 - Present)<br>Developed web applications and contributed to team projects.</li>
+                    <li><strong>Mathematics Analyst</strong> at Air India (Nov 2024 - Present)<br>Tester</li>
                 </ul>
             </div>
         </div>
@@ -216,11 +135,42 @@
             <div id="contact" style="display:none;">
                 <ul>
                     <li>
-                        <a href="https://www.linkedin.com/in/supriya-mandal-505a53271/" target="_blank" style="color:#0077b5; text-decoration:underline; font-weight:bold;">LinkedIn Profile</a>
+                        <a href="https://www.linkedin.com/in/supriya-mandal-505a53271/" target="_blank" style="color:#0077b5; text-decoration:underline; font-weight:bold; display: flex; align-items: center; gap: 6px;">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn" style="width:22px; height:22px; vertical-align:middle;"> LinkedIn Profile
+                        </a>
                     </li>
                 </ul>
             </div>
         </div>
+
+        <div class="section">
+            <button onclick="toggleSection('feedback', this)">Upload Attachment / Leave a Comment <span class="dropdown-icon">▼</span></button>
+            <div id="feedback" style="display:none;">
+                <form id="feedbackForm" enctype="multipart/form-data" style="margin-top:15px;">
+                    <label for="attachment">Attach a file:</label><br>
+                    <input type="file" id="attachment" name="attachment"><br><br>
+                    <label for="comment">Your comment:</label><br>
+                    <textarea id="comment" name="comment" rows="4" cols="50" placeholder="Write your comment here..."></textarea><br><br>
+                    <button type="submit">Submit</button>
+                </form>
+                <div id="feedbackMessage" style="margin-top:10px; color:green;"></div>
+            </div>
+        </div>
+        <script>
+            // Simple feedback form handler (no backend, just demo)
+            document.getElementById('feedbackForm').onsubmit = function(e) {
+                e.preventDefault();
+                document.getElementById('feedbackMessage').textContent = "Thank you for your feedback! (Note: File upload requires backend support.)";
+                this.reset();
+            };
+        </script>
     </div>
+    <footer style="width:100%; text-align:center; background:#e3f2fd; color:#1565c0; padding:18px 0 12px 0; font-size:17px; font-weight:bold; letter-spacing:0.5px; margin-top:40px; border-top:1px solid #b3e5fc; display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <span>© 2025 Supriya Mandal  |  Welcome to my webpage!</span>
+        <a href="https://www.linkedin.com/in/supriya-mandal-505a53271/" target="_blank" style="display:inline-flex; align-items:center; gap:7px; color:#0077b5; text-decoration:none; font-weight:normal; font-size:16px;">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn" style="width:22px; height:22px; vertical-align:middle;"> LinkedIn
+        </a>
+    </footer>
 </body>
 </html>
+
