@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f8ffae 0%, #43c6ac 100%);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            background: #ffeaea; /* Soft red for canvas */
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 40px;
+            color: #11235A; /* Navy blue for all text in container */
+        }
+        h1, h2, th, td, p, ul, li, table {
+            color: #11235A;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .gallery img {
+            width: 180px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        .section {
+            margin-bottom: 35px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background: #f0f0f0;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: left;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <style>
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: auto;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            position: relative;
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .modal-img {
+            max-width: 80vw;
+            max-height: 70vh;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+        .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            background: #ff5f57;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            transition: background 0.2s;
+        }
+        .close-btn:hover {
+            background: #bf4943;
+        }
+    </style>
+    <script>
+        function toggleSection(id, btn) {
+            var section = document.getElementById(id);
+            var icon = btn.querySelector('.dropdown-icon');
+            if (section.style.display === 'none' || section.style.display === '') {
+                section.style.display = 'block';
+                if (icon) icon.textContent = '▲';
+            } else {
+                section.style.display = 'none';
+                if (icon) icon.textContent = '▼';
+            }
+        }
+
+        // Modal logic
+        function openModal(src, alt) {
+            const modal = document.getElementById('imgModal');
+            const modalImg = document.getElementById('modalImg');
+            modal.style.display = 'flex';
+            modalImg.src = src;
+            modalImg.alt = alt;
+        }
+        function closeModal() {
+            document.getElementById('imgModal').style.display = 'none';
+        }
+        window.onclick = function(event) {
+            var modal = document.getElementById('imgModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Supriya Mandal's Personal Homepage</h1>
+        <p>Hello, and thank you for visiting my page. Here you can learn more about me, see some of my favorite moments, and explore my background.</p>
+
+        <div class="section">
+            <button onclick="toggleSection('gallery', this)">Gallery <span class="dropdown-icon">▼</span></button>
+            <div class="gallery" id="gallery" style="display:none;">
+                <img src="../bg.png" alt="" onclick="openModal(this.src, '')">
+                <img src="../bird.png" alt="" onclick="openModal(this.src, '')">
+                <img src="../Sup_imaage.JPG" alt="" onclick="openModal(this.src, '')">
+                <img src="../pipeNorth.png" alt="" onclick="openModal(this.src, '')">
+                <img src="../pipeSouth.png" alt="" onclick="openModal(this.src, '')">
+            </div>
+        </div>
+        <!-- Modal for image zoom -->
+        <div id="imgModal" class="modal">
+            <div class="modal-content">
+                <button class="close-btn" onclick="closeModal()" title="Close">&#10005;</button>
+                <img id="modalImg" class="modal-img" src="" alt="">
+            </div>
+        </div>
+
+        <div class="section">
+            <button onclick="toggleSection('education', this)">Academic Qualification <span class="dropdown-icon">▼</span></button>
+            <div id="education" style="display:none;">
+                <table>
+                    <tr>
+                        <th>Degree</th>
+                        <th>Subject</th>
+                        <th>Institution</th>
+                        <th>Year</th>
+                    </tr>
+                    <tr>
+                        <td>Bachelor of Science</td>
+                        <td>Mathematics</td>
+                        <td>Presidency University, Kolkata</td>
+                        <td>2022</td>
+                    </tr>
+                    <tr>
+                        <td>Master of Science</td>
+                        <td>Mathematics</td>
+                        <td>IIT Bombay</td>
+                        <td>2024</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <button onclick="toggleSection('work', this)">Work Experience <span class="dropdown-icon">▼</span></button>
+            <div id="work" style="display:none;">
+                <ul>
+                    <li><strong>Mathematics Analyst</strong> at Tech Solutions (2022 - Present)<br>Developed web applications and contributed to team projects.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <button onclick="toggleSection('contact', this)">Contact <span class="dropdown-icon">▼</span></button>
+            <div id="contact" style="display:none;">
+                <ul>
+                    <li>
+                        <a href="https://www.linkedin.com/in/supriya-mandal-505a53271/" target="_blank" style="color:#0077b5; text-decoration:underline; font-weight:bold;">LinkedIn Profile</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
