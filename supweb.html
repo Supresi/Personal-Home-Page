@@ -14,7 +14,7 @@
         .container {
             max-width: 1100px;
             margin: 40px auto;
-            background: #A62205; /* Soft red for canvas */
+            background: #608cdd; /* Soft red for canvas */
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(21,101,192,0.07);
             padding: 40px;
@@ -41,9 +41,9 @@
             background: #f0f0f0;
         }
         button {
-            background-color: #007bff;
-            color: white;
-            border: none;
+            background-color: #F2B872;
+            color: black;
+            border: 2px solid #140101;
             padding: 10px 15px;
             text-align: left;
             cursor: pointer;
@@ -52,20 +52,59 @@
             font-size: 16px;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #3dcf5a;
         }
         header {
             width:100%;
-            background:#e3f2fd;
-            color:#1565c0;
+            background:#a5b5bf;
+            color:#031428;
             padding:22px 0 16px 0;
             font-size:2.1rem;
             font-weight:bold;
             letter-spacing:1px;
             text-align:center;
-            border-bottom:1px solid #b3e5fc;
+            border-bottom:3px solid #245473;
+            border-top:3px solid #245473;
             margin-bottom:30px;
             box-shadow:0 2px 8px rgba(21,101,192,0.07);
+            position:relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        #analog-clock-container {
+            position: absolute;
+            right: 30px;
+            top: 10px;
+            width: 80px;
+            height: 80px;
+            display: inline-block;
+        }
+        .feedback-submit-btn {
+            background: #9ce06c;
+            color: black;
+            font-weight: bold;
+            border: 1.5px solid #388e3c;
+            border-radius: 4px;
+            padding: 3px 10px;
+            font-size: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+            transition: background 0.2s, border-color 0.2s;
+            min-width: 0;
+            width: auto;
+            cursor: pointer;
+        }
+        .feedback-submit-btn:hover {
+            background: #5cb85c;
+            border-color: #1b5e20;
+        }
+        #header-sky-svg {
+            z-index: 0 !important;
+        }
+        header > *:not(#header-sky-svg) {
+            position: relative;
+            z-index: 2;
         }
     </style>
     <script>
@@ -83,8 +122,10 @@
     </script>
 </head>
 <body>
-    <header>
-        Supriya Mandal's Portfolio
+    <header style="display: flex; align-items: center; justify-content: space-between; position:relative;">
+        <span id="header-sky-svg" style="width:100px; height:80px; display:flex; align-items:center;"></span>
+        <span style="flex:1; text-align:center;">Supriya Mandal's Portfolio</span>
+        <span id="analog-clock-container"></span>
     </header>
     <div class="container">
         <h1>Welcome to Supriya Mandal's Personal Homepage</h1>
@@ -94,7 +135,7 @@
             <button onclick="toggleSection('education', this)">Academic Qualification <span class="dropdown-icon">▼</span></button>
             <div id="education" style="display:none;">
                 <div style="margin-bottom:18px; margin-left:30px;">
-                    <button onclick="toggleSection('education-details', this)" type="button" style="background:#e3f2fd; color:#1565c0; border:1px solid #90caf9; font-weight:bold; margin-bottom:8px; border-radius:6px; padding:7px 18px; box-shadow:0 1px 3px rgba(21,101,192,0.07);">Education <span class="dropdown-icon">▼</span></button>
+                    <button onclick="toggleSection('education-details', this)" type="button" style="background:#fde3ef; color:#1565c0; border:1px solid #90caf9; font-weight:bold; margin-bottom:8px; border-radius:6px; padding:7px 18px; box-shadow:0 1px 3px rgba(21,101,192,0.07);">Education <span class="dropdown-icon">▼</span></button>
                     <div id="education-details" style="display:none; margin-left:22px;">
                         <ul style="list-style-type: disc;">
                             <li style="margin-bottom: 1em;"><strong>M.Sc. in Mathematics</strong><br>
@@ -146,31 +187,373 @@
         <div class="section">
             <button onclick="toggleSection('feedback', this)">Upload Attachment / Leave a Comment <span class="dropdown-icon">▼</span></button>
             <div id="feedback" style="display:none;">
-                <form id="feedbackForm" enctype="multipart/form-data" style="margin-top:15px;">
+                <form id="feedbackForm" enctype="multipart/form-data" style="margin-top:15px; position:relative; padding-bottom:0;">
                     <label for="attachment">Attach a file:</label><br>
                     <input type="file" id="attachment" name="attachment"><br><br>
                     <label for="comment">Your comment:</label><br>
-                    <textarea id="comment" name="comment" rows="4" cols="50" placeholder="Write your comment here..."></textarea><br><br>
-                    <button type="submit">Submit</button>
+                    <textarea id="comment" name="comment" rows="4" cols="50" placeholder="Write your comment here..." style="width:100%;"></textarea><br>
+                    <div style="width:100%; display:flex; justify-content:flex-end; margin-top:6px;">
+                        <button type="submit" class="feedback-submit-btn">Submit</button>
+                    </div>
                 </form>
                 <div id="feedbackMessage" style="margin-top:10px; color:green;"></div>
             </div>
         </div>
-        <script>
-            // Simple feedback form handler (no backend, just demo)
-            document.getElementById('feedbackForm').onsubmit = function(e) {
-                e.preventDefault();
-                document.getElementById('feedbackMessage').textContent = "Thank you for your feedback! (Note: File upload requires backend support.)";
-                this.reset();
-            };
-        </script>
     </div>
-    <footer style="width:100%; text-align:center; background:#e3f2fd; color:#1565c0; padding:18px 0 12px 0; font-size:17px; font-weight:bold; letter-spacing:0.5px; margin-top:40px; border-top:1px solid #b3e5fc; display:flex; flex-direction:column; align-items:center; gap:8px;">
-        <span>© 2025 Supriya Mandal  |  Welcome to my webpage!</span>
-        <a href="https://www.linkedin.com/in/supriya-mandal-505a53271/" target="_blank" style="display:inline-flex; align-items:center; gap:7px; color:#0077b5; text-decoration:none; font-weight:normal; font-size:16px;">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn" style="width:22px; height:22px; vertical-align:middle;"> LinkedIn
-        </a>
+    <footer style="width:100%; background:#e3f2fd; color:#1565c0; padding:18px 0 12px 0; font-size:17px; font-weight:bold; letter-spacing:0.5px; margin-top:40px; border-top:1px solid #b3e5fc; display:flex; flex-direction:row; align-items:center; gap:8px; justify-content:center; position:relative;">
+        <div style="position:absolute; left:24px; bottom:12px; display:flex; flex-direction:column; align-items:flex-start;">
+            <span id="indian-datetime" style="font-size:15px; color:#245473; font-weight:normal;"></span>
+            <span id="utc-datetime" style="font-size:15px; color:#245473; font-weight:normal; margin-top:2px;"></span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+            <span>© 2025 Supriya Mandal  |  Welcome to my webpage!</span>
+            <a href="https://www.linkedin.com/in/supriya-mandal-505a53271/" target="_blank" style="display:inline-flex; align-items:center; gap:7px; color:#0077b5; text-decoration:none; font-weight:normal; font-size:16px;">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn" style="width:22px; height:22px; vertical-align:middle;"> LinkedIn
+            </a>
+        </div>
+        <div id="view-count-odometer" style="position:absolute; right:24px; bottom:12px; width:110px; height:38px;"></div>
     </footer>
+    <script>
+        // Simple feedback form handler (no backend, just demo)
+        document.getElementById('feedbackForm').onsubmit = function(e) {
+            e.preventDefault();
+            document.getElementById('feedbackMessage').textContent = "Thank you for your feedback! (Note: File upload requires backend support.)";
+            this.reset();
+        };
+
+        // Show current Indian date and time in the footer (ensure script runs after footer exists)
+        function pad2(n) { return n < 10 ? '0' + n : n; }
+        function getDayShort(d) {
+            return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d];
+        }
+        function updateIndianDateTime() {
+            const now = new Date();
+            // Convert to IST (UTC+5:30)
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const istOffset = 5.5 * 60 * 60 * 1000;
+            const istTime = new Date(utc + istOffset);
+            // 24-hour format for IST with day
+            const istStr = `${getDayShort(istTime.getDay())}, ${istTime.getFullYear()}-${pad2(istTime.getMonth()+1)}-${pad2(istTime.getDate())} ` +
+                `${pad2(istTime.getHours())}:${pad2(istTime.getMinutes())}:${pad2(istTime.getSeconds())} IST`;
+            const dtElem = document.getElementById('indian-datetime');
+            if (dtElem) dtElem.textContent = istStr;
+            // 24-hour format for UTC with day
+            const utcStr = `${getDayShort(now.getUTCDay())}, ${now.getUTCFullYear()}-${pad2(now.getUTCMonth()+1)}-${pad2(now.getUTCDate())} ` +
+                `${pad2(now.getUTCHours())}:${pad2(now.getUTCMinutes())}:${pad2(now.getUTCSeconds())} UTC`;
+            const utcElem = document.getElementById('utc-datetime');
+            if (utcElem) utcElem.textContent = utcStr;
+        }
+        updateIndianDateTime();
+        setInterval(updateIndianDateTime, 1000);
+
+        // Odometer-style visitor count
+        function updateViewCount() {
+            let count = localStorage.getItem('supweb_view_count');
+            if (!count) count = 0;
+            count = parseInt(count) + 1;
+            localStorage.setItem('supweb_view_count', count);
+            drawOdometer(count);
+        }
+        function drawOdometer(count) {
+            var container = document.getElementById('view-count-odometer');
+            if (!container) return;
+            container.innerHTML = '';
+            // Format count as 6 digits with leading zeros
+            var str = count.toString().padStart(6, '0');
+            // SVG odometer
+            var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', '110');
+            svg.setAttribute('height', '38');
+            // Background rectangle
+            var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('x', '2');
+            rect.setAttribute('y', '2');
+            rect.setAttribute('width', '106');
+            rect.setAttribute('height', '34');
+            rect.setAttribute('rx', '7');
+            rect.setAttribute('fill', '#222');
+            rect.setAttribute('stroke', '#888');
+            rect.setAttribute('stroke-width', '2');
+            svg.appendChild(rect);
+            // Draw digit windows
+            for (let i = 0; i < 6; i++) {
+                let digitRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                digitRect.setAttribute('x', 6 + i * 16);
+                digitRect.setAttribute('y', 6);
+                digitRect.setAttribute('width', '14');
+                digitRect.setAttribute('height', '26');
+                digitRect.setAttribute('rx', '3');
+                digitRect.setAttribute('fill', '#fff');
+                digitRect.setAttribute('stroke', '#bbb');
+                digitRect.setAttribute('stroke-width', '1');
+                svg.appendChild(digitRect);
+                let digitText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                digitText.setAttribute('x', 13 + i * 16);
+                digitText.setAttribute('y', '25');
+                digitText.setAttribute('text-anchor', 'middle');
+                digitText.setAttribute('font-size', '18');
+                digitText.setAttribute('font-family', 'monospace');
+                digitText.setAttribute('fill', '#222');
+                digitText.setAttribute('font-weight', 'bold');
+                digitText.textContent = str[i];
+                svg.appendChild(digitText);
+            }
+            // Label
+            var label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', '55');
+            label.setAttribute('y', '37');
+            label.setAttribute('text-anchor', 'middle');
+            label.setAttribute('font-size', '10');
+            label.setAttribute('fill', '#245473');
+            label.textContent = 'Visitors';
+            svg.appendChild(label);
+            container.appendChild(svg);
+        }
+        updateViewCount();
+
+        // Enhanced analog clock in header (12-hour format, larger and more stylish)
+        function drawAnalogClock() {
+            var container = document.getElementById('analog-clock-container');
+            if (!container) return;
+            container.innerHTML = '';
+            var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', '80');
+            svg.setAttribute('height', '80');
+            // Simple clock face: light border, white face, only 12, 3, 6, 9
+            var face = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            face.setAttribute('cx', '40');
+            face.setAttribute('cy', '40');
+            face.setAttribute('r', '36');
+            face.setAttribute('fill', '#fff');
+            face.setAttribute('stroke', '#245473');
+            face.setAttribute('stroke-width', '2');
+            svg.appendChild(face);
+            // Draw numbers only for 12, 3, 6, 9
+            var nums = ['12', '3', '6', '9'];
+            for (let i = 0; i < 4; i++) {
+                let angle = (i * 90) * Math.PI / 180;
+                let numX = 40 + 24 * Math.sin(angle);
+                let numY = 44 - 24 * Math.cos(angle);
+                let number = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                number.setAttribute('x', numX);
+                number.setAttribute('y', numY);
+                number.setAttribute('text-anchor', 'middle');
+                number.setAttribute('font-size', '14');
+                number.setAttribute('font-family', 'Arial, sans-serif');
+                number.setAttribute('fill', '#1565c0');
+                number.setAttribute('font-weight', 'bold');
+                number.textContent = nums[i];
+                svg.appendChild(number);
+            }
+            // Hour marks
+            for (let i = 0; i < 12; i++) {
+                let angle = (i * 30) * Math.PI / 180;
+                let x1 = 40 + 28 * Math.sin(angle);
+                let y1 = 40 - 28 * Math.cos(angle);
+                let x2 = 40 + 34 * Math.sin(angle);
+                let y2 = 40 - 34 * Math.cos(angle);
+                let mark = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                mark.setAttribute('x1', x1);
+                mark.setAttribute('y1', y1);
+                mark.setAttribute('x2', x2);
+                mark.setAttribute('y2', y2);
+                mark.setAttribute('stroke', '#245473');
+                mark.setAttribute('stroke-width', i % 3 === 0 ? '3' : '1.5');
+                svg.appendChild(mark);
+            }
+            // Get current time
+            var now = new Date();
+            var hour = now.getHours() % 12;
+            var min = now.getMinutes();
+            var sec = now.getSeconds();
+            // Hour hand
+            var hourAngle = ((hour + min / 60) * 30) * Math.PI / 180;
+            var hourX = 40 + 18 * Math.sin(hourAngle);
+            var hourY = 40 - 18 * Math.cos(hourAngle);
+            var hourHand = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            hourHand.setAttribute('x1', '40');
+            hourHand.setAttribute('y1', '40');
+            hourHand.setAttribute('x2', hourX);
+            hourHand.setAttribute('y2', hourY);
+            hourHand.setAttribute('stroke', '#388e3c');
+            hourHand.setAttribute('stroke-width', '4');
+            hourHand.setAttribute('stroke-linecap', 'round');
+            svg.appendChild(hourHand);
+            // Minute hand
+            var minAngle = ((min + sec / 60) * 6) * Math.PI / 180;
+            var minX = 40 + 26 * Math.sin(minAngle);
+            var minY = 40 - 26 * Math.cos(minAngle);
+            var minHand = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            minHand.setAttribute('x1', '40');
+            minHand.setAttribute('y1', '40');
+            minHand.setAttribute('x2', minX);
+            minHand.setAttribute('y2', minY);
+            minHand.setAttribute('stroke', '#007bff');
+            minHand.setAttribute('stroke-width', '3');
+            minHand.setAttribute('stroke-linecap', 'round');
+            svg.appendChild(minHand);
+            // Second hand
+            var secAngle = (sec * 6) * Math.PI / 180;
+            var secX = 40 + 30 * Math.sin(secAngle);
+            var secY = 40 - 30 * Math.cos(secAngle);
+            var secHand = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            secHand.setAttribute('x1', '40');
+            secHand.setAttribute('y1', '40');
+            secHand.setAttribute('x2', secX);
+            secHand.setAttribute('y2', secY);
+            secHand.setAttribute('stroke', '#d32f2f');
+            secHand.setAttribute('stroke-width', '2');
+            secHand.setAttribute('stroke-linecap', 'round');
+            svg.appendChild(secHand);
+            // Center dot
+            var center = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            center.setAttribute('cx', '40');
+            center.setAttribute('cy', '40');
+            center.setAttribute('r', '3');
+            center.setAttribute('fill', '#245473');
+            svg.appendChild(center);
+            container.appendChild(svg);
+        }
+        drawAnalogClock();
+        setInterval(drawAnalogClock, 1000);
+
+        // Day/Night SVG in header (left side) based on IST
+        function drawHeaderSkyIcon() {
+            var container = document.getElementById('header-sky-svg');
+            if (!container) return;
+            container.innerHTML = '';
+            // Get IST hour
+            const now = new Date();
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const istOffset = 5.5 * 60 * 60 * 1000;
+            const ist = new Date(utc + istOffset);
+            const hour = ist.getHours();
+            var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', '90');
+            svg.setAttribute('height', '90');
+            if (hour >= 6 && hour < 18) {
+                // Day: slightly smaller sun + clouds
+                var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+                var radialGradient = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient');
+                radialGradient.setAttribute('id', 'sunGradient');
+                var stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                stop1.setAttribute('offset', '0%');
+                stop1.setAttribute('stop-color', '#fffde4');
+                var stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                stop2.setAttribute('offset', '80%');
+                stop2.setAttribute('stop-color', '#ffe066');
+                var stop3 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                stop3.setAttribute('offset', '100%');
+                stop3.setAttribute('stop-color', '#ffd700');
+                radialGradient.appendChild(stop1);
+                radialGradient.appendChild(stop2);
+                radialGradient.appendChild(stop3);
+                defs.appendChild(radialGradient);
+                svg.appendChild(defs);
+                var sun = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                sun.setAttribute('cx', '34');
+                sun.setAttribute('cy', '45');
+                sun.setAttribute('r', '22'); // Reduced radius
+                sun.setAttribute('fill', 'url(#sunGradient)');
+                sun.setAttribute('stroke', '#ffd700');
+                sun.setAttribute('stroke-width', '2');
+                svg.appendChild(sun);
+                // Sun rays
+                for (let i = 0; i < 12; i++) {
+                    let angle = (i * 30) * Math.PI / 180;
+                    let x1 = 34 + 25 * Math.cos(angle);
+                    let y1 = 45 + 25 * Math.sin(angle);
+                    let x2 = 34 + 34 * Math.cos(angle);
+                    let y2 = 45 + 34 * Math.sin(angle);
+                    let ray = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    ray.setAttribute('x1', x1);
+                    ray.setAttribute('y1', y1);
+                    ray.setAttribute('x2', x2);
+                    ray.setAttribute('y2', y2);
+                    ray.setAttribute('stroke', '#ffe066');
+                    ray.setAttribute('stroke-width', '1.7');
+                    ray.setAttribute('opacity', '0.7');
+                    svg.appendChild(ray);
+                }
+                // Clouds
+                function drawCloud(cx, cy, scale) {
+                    let cloudParts = [
+                        {rx: 14*scale, ry: 9*scale, dx: 0, dy: 0},
+                        {rx: 9*scale, ry: 9*scale, dx: -11*scale, dy: 2*scale},
+                        {rx: 8*scale, ry: 8*scale, dx: 11*scale, dy: 2*scale},
+                        {rx: 7*scale, ry: 7*scale, dx: 6*scale, dy: -6*scale}
+                    ];
+                    cloudParts.forEach(part => {
+                        let e = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+                        e.setAttribute('cx', cx + part.dx);
+                        e.setAttribute('cy', cy + part.dy);
+                        e.setAttribute('rx', part.rx);
+                        e.setAttribute('ry', part.ry);
+                        e.setAttribute('fill', '#fff');
+                        e.setAttribute('opacity', '0.85');
+                        svg.appendChild(e);
+                    });
+                }
+                drawCloud(66, 60, 0.9);
+                drawCloud(78, 42, 0.65);
+            } else {
+                // Night: slightly smaller moon + stars
+                var moon = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                moon.setAttribute('cx', '34');
+                moon.setAttribute('cy', '45');
+                moon.setAttribute('r', '18'); // Reduced radius
+                moon.setAttribute('fill', '#fffde4');
+                moon.setAttribute('stroke', '#e0e0e0');
+                moon.setAttribute('stroke-width', '1.5');
+                svg.appendChild(moon);
+                var crescent = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+                crescent.setAttribute('cx', '40');
+                crescent.setAttribute('cy', '45');
+                crescent.setAttribute('rx', '15');
+                crescent.setAttribute('ry', '16');
+                crescent.setAttribute('fill', '#21243a');
+                svg.appendChild(crescent);
+                // Stars
+                for (let i = 0; i < 12; i++) {
+                    let star = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    let r = Math.random() * 1.7 + 0.5;
+                    let cx = 60 + Math.random() * 22;
+                    let cy = 22 + Math.random() * 44;
+                    star.setAttribute('cx', cx);
+                    star.setAttribute('cy', cy);
+                    star.setAttribute('r', r);
+                    star.setAttribute('fill', '#fff');
+                    star.setAttribute('opacity', Math.random() * 0.6 + 0.4);
+                    svg.appendChild(star);
+                    // Some stars as crosses
+                    if (Math.random() > 0.7) {
+                        let cross1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                        cross1.setAttribute('x1', cx - r);
+                        cross1.setAttribute('y1', cy);
+                        cross1.setAttribute('x2', cx + r);
+                        cross1.setAttribute('y2', cy);
+                        cross1.setAttribute('stroke', '#fff');
+                        cross1.setAttribute('stroke-width', '0.7');
+                        cross1.setAttribute('opacity', '0.7');
+                        svg.appendChild(cross1);
+                        let cross2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                        cross2.setAttribute('x1', cx);
+                        cross2.setAttribute('y1', cy - r);
+                        cross2.setAttribute('x2', cx);
+                        cross2.setAttribute('y2', cy + r);
+                        cross2.setAttribute('stroke', '#fff');
+                        cross2.setAttribute('stroke-width', '0.7');
+                        cross2.setAttribute('opacity', '0.7');
+                        svg.appendChild(cross2);
+                    }
+                }
+            }
+            container.appendChild(svg);
+        }
+        drawHeaderSkyIcon();
+        setInterval(drawHeaderSkyIcon, 60000);
+    </script>
 </body>
 </html>
+
 
