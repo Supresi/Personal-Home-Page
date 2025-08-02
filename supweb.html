@@ -291,6 +291,28 @@
         }
     </style>
     <script src="interactive.js"></script>
+    <script>
+    // Tab persistence logic
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabButtons = document.querySelectorAll('.canvas-nav-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        // Restore last tab from localStorage
+        let lastTabId = localStorage.getItem('activeTabId');
+        if (lastTabId && document.getElementById('tab-' + lastTabId)) {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.style.display = 'none');
+            document.getElementById('tab-' + lastTabId).classList.add('active');
+            document.getElementById('tab-content-' + lastTabId).style.display = 'block';
+        }
+        // Listen for tab clicks and save selection
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = btn.id.replace('tab-', '');
+                localStorage.setItem('activeTabId', tabId);
+            });
+        });
+    });
+    </script>
 </head>
 <body>
     <header style="display: flex; align-items: center; justify-content: space-between; position:relative;">
@@ -344,8 +366,8 @@
     <div id="tab-content-home" class="tab-content" style="display:block;">
         <div style="display:flex; flex-direction:column; align-items:center; margin-top:32px;">
             <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/20250104_110808.jpg" alt="Supriya Mandal Profile" style="width:300px; height:300px; object-fit:cover; border-radius:50%; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
-            <h2 style="margin-bottom:12px; font-size:2.2em; margin-top:18px;">Supriya Mandal</h2>
-            <p style="font-size:1.35em; line-height:1.8; color:#245473; text-align:center; max-width:900px;">Hello! I'm Supriya Mandal, a passionate learner and explorer in mathematics, data analytics, and technology. I love solving problems, building creative projects, and sharing knowledge. Welcome to my portfolio!</p>
+            <h2 style="margin-bottom:12px; font-size:1.8em; margin-top:18px;">Supriya Mandal</h2>
+            <p style="font-size:1.35em; line-height:1.8; color:#245473; text-align:center; max-width:900px;">Hello! I'm Supriya Mandal, a passionate learner and explorer in mathematics, data analytics, and technology. I love solving problems, building creative projects, and sharing knowledge. Currently working as Graduate Engineer Trainee at Air India, responsible for Quality Assurance. Welcome to my portfolio!</p>
             <div style="margin-top:32px; background:transparent; border-radius:10px; box-shadow:0 2px 8px rgba(21,101,192,0.10); padding:18px 0 0 0; max-width:420px; width:100%; text-align:center; color:#245473;">
                 <a href="https://www.linkedin.com/in/supriya-mandal-505a53271/" target="_blank" style="text-decoration:none; color:#1565c0;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#1565c0" style="vertical-align:middle;"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.838-1.563 3.036 0 3.597 2 3.597 4.594v5.602z"/></svg>
@@ -393,7 +415,7 @@
     <div id="tab-content-photos" class="tab-content" style="display:none;">
         <div style="display:flex; flex-wrap:wrap; gap:18px; justify-content:center; margin:36px auto; max-width:900px;">
             <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/20250104_110808.jpg" alt="Photo 1" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
-            <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/blob/main/IMG_1214.JPG" alt="Photo 2" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
+            <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/IMG_1214.JPG" alt="Photo 2" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
             <!-- Add more <img> tags here if you add more images to sup_Gallary_for_web -->
             <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/IMG_4770.JPG" alt="Photo 3" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
             <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/20250104_110808.jpg" alt="Photo 4" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
@@ -423,8 +445,8 @@
     </div>
 </div>
     <footer style="width:100%; background:#245473; color:#fff; text-align:center; padding:18px 0; font-size:1.25em; letter-spacing:1px; margin-top:40px; border-top:3px solid #43c6ac;">
-        Supriya Mandal ©2025
-        <a href="https://www.linkedin.com/in/supriya-mandal-505a53271/" target="_blank" style="margin-left:18px; vertical-align:middle; text-decoration:none; color:#fff;">
+        ©2025 Supriya Mandal
+        <a href="https://www.linkedin.com/in/supriya-mandal-505a53271/" target="_blank" style="margin-left:18px; vertical-align:middle; text-decoration:none; color:#3610ca;">
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="#fff" style="vertical-align:middle;"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.838-1.563 3.036 0 3.597 2 3.597 4.594v5.602z"/></svg>
         </a>
     </footer>
@@ -476,5 +498,3 @@
     </script>
 </body>
 </html>
-
-
