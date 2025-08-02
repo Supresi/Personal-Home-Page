@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile</title>
     <style>
+        /* Tab active style */
+        .canvas-nav-btn.active {
+            background: #43c6ac;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(21,101,192,0.18);
+        }
         body {
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #245473 0%, #43c6ac 100%);
@@ -20,6 +26,7 @@
             padding: 40px;
             color: #11235A; /* Navy blue for all text in container */
             display: block;
+            position: relative;
         }
         h1, h2, th, td, p, ul, li, table {
             color: #11235A;
@@ -35,7 +42,10 @@
         th, td {
             border: 1px solid #ccc;
             padding: 8px 12px;
-            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
         th {
             background: #f0f0f0;
@@ -54,9 +64,66 @@
         button:hover {
             background-color: #3dcf5a;
         }
+        /* Animated dropdown for menu */
+        #main-menu-dropdown {
+            transition: max-height 0.35s cubic-bezier(.4,0,.2,1), opacity 0.25s cubic-bezier(.4,0,.2,1);
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            pointer-events: none;
+            min-width: 120px !important;
+            width: 120px !important;
+        }
+        #main-menu-dropdown.menu-open {
+            max-height: 400px;
+            opacity: 1;
+            pointer-events: auto;
+        }
+        /* Canvas top nav as horizontal rectangle with equal boxes */
+        #canvas-top-nav {
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: stretch;
+            background: #e3f2fd;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(21,101,192,0.10);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .canvas-nav-btn {
+            flex: 1 1 0;
+            min-width: 140px;
+            background: #F2B872;
+            color: #245473;
+            border: none;
+            border-right: 1.5px solid #b3e5fc;
+            font-size: 17px;
+            font-weight: bold;
+            padding: 22px 0;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            border-radius: 0;
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .canvas-nav-btn:last-child {
+            border-right: none;
+        }
+        .canvas-nav-btn:hover, .canvas-nav-btn:focus {
+            background: #43c6ac;
+            color: #fff;
+        }
         header {
             width:100%;
-            background:#a5b5bf;
+            background:#245473;
             color:#031428;
             padding:22px 0 16px 0;
             font-size:2.1rem;
@@ -106,454 +173,306 @@
             position: relative;
             z-index: 2;
         }
-    </style>
-    <script>
-        function toggleSection(id, btn) {
-            var section = document.getElementById(id);
-            var icon = btn.querySelector('.dropdown-icon');
-            if (section.style.display === 'none' || section.style.display === '') {
-                section.style.display = 'block';
-                if (icon) icon.textContent = '▲';
-            } else {
-                section.style.display = 'none';
-                if (icon) icon.textContent = '▼';
-            }
+        #academic-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(36, 84, 115, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
-    </script>
+        #academic-modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        #academic-modal {
+            background: #e3f2fd;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(21,101,192,0.18);
+            padding: 36px 32px 28px 32px;
+            min-width: 320px;
+            max-width: 420px;
+            color: #245473;
+            position: relative;
+        }
+        #academic-modal h2 {
+            margin-top: 0;
+            color: #1565c0;
+            font-size: 1.5em;
+        }
+        #academic-modal .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 18px;
+            background: #fde3ef;
+            color: #1565c0;
+            border: 1px solid #90caf9;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #work-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(36, 84, 115, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        #work-modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        #work-modal {
+            background: #e3f2fd;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(21,101,192,0.18);
+            padding: 36px 32px 28px 32px;
+            min-width: 320px;
+            max-width: 420px;
+            color: #245473;
+            position: relative;
+        }
+        #work-modal h2 {
+            margin-top: 0;
+            color: #1565c0;
+            font-size: 1.5em;
+        }
+        #work-modal .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 18px;
+            background: #fde3ef;
+            color: #1565c0;
+            border: 1px solid #90caf9;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .canvas-datetime {
+            position: absolute;
+            top: 18px;
+            right: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            z-index: 10;
+        }
+        .canvas-datetime span {
+            font-size: 15px;
+            color: #245473;
+            font-weight: normal;
+        }
+    </style>
+    <script src="interactive.js"></script>
 </head>
 <body>
     <header style="display: flex; align-items: center; justify-content: space-between; position:relative;">
         <span id="header-sky-svg" style="width:100px; height:80px; display:flex; align-items:center;"></span>
-        <span style="flex:1; text-align:center;">Supriya Mandal's Portfolio</span>
-        <span id="analog-clock-container"></span>
+        <div style="flex-grow:1; display:flex; justify-content:center; align-items:center; position:relative;">
+            <span style="position:absolute; left:0; right:0; margin:auto; text-align:center; font-size:2.1rem; font-weight:bold; color:#f8fafc; width:100%;">Welcome to Supriya Mandal's Portfolio</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+            <span id="header-utc" style="font-size:0.42em; color:#fff; font-weight:normal; text-align:left;">UTC: --:--</span>
+            <span id="header-ist" style="font-size:0.42em; color:#fff; font-weight:normal; text-align:left;">IST: --:--</span>
+            <span id="analog-clock-container"></span>
+        </div>
+    <script>
+        function updateHeaderTimes() {
+            const utcElem = document.getElementById('header-utc');
+            const istElem = document.getElementById('header-ist');
+            const now = new Date();
+            // Days array
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            // UTC
+            const utcDay = days[now.getUTCDay()];
+            const utcDate = now.getUTCFullYear() + '-' + (now.getUTCMonth()+1).toString().padStart(2,'0') + '-' + now.getUTCDate().toString().padStart(2,'0');
+            const utcHours = now.getUTCHours().toString().padStart(2, '0');
+            const utcMinutes = now.getUTCMinutes().toString().padStart(2, '0');
+            const utcSeconds = now.getUTCSeconds().toString().padStart(2, '0');
+            utcElem.textContent = `UTC: ${utcDay}, ${utcDate} ${utcHours}:${utcMinutes}:${utcSeconds}`;
+            // IST (UTC+5:30)
+            let ist = new Date(now.getTime() + (5.5 * 60 * 60 * 1000));
+            const istDay = days[ist.getUTCDay()];
+            const istDate = ist.getUTCFullYear() + '-' + (ist.getUTCMonth()+1).toString().padStart(2,'0') + '-' + ist.getUTCDate().toString().padStart(2,'0');
+            const istHours = ist.getUTCHours().toString().padStart(2, '0');
+            const istMinutes = ist.getUTCMinutes().toString().padStart(2, '0');
+            const istSeconds = ist.getUTCSeconds().toString().padStart(2, '0');
+            istElem.textContent = `IST: ${istDay}, ${istDate} ${istHours}:${istMinutes}:${istSeconds}`;
+        }
+        setInterval(updateHeaderTimes, 1000);
+        window.addEventListener('DOMContentLoaded', updateHeaderTimes);
+    </script>
     </header>
-    <div class="container">
-        <h1>Welcome to Supriya Mandal's Personal Homepage</h1>
-        <p>Hello, and thank you for visiting my page. Here you can learn more about me, see some of my favorite moments, and explore my background.</p>
 
-        <div class="section">
-            <button onclick="toggleSection('education', this)">Academic Qualification <span class="dropdown-icon">▼</span></button>
-            <div id="education" style="display:none;">
-                <div style="margin-bottom:18px; margin-left:30px;">
-                    <button onclick="toggleSection('education-details', this)" type="button" style="background:#fde3ef; color:#1565c0; border:1px solid #90caf9; font-weight:bold; margin-bottom:8px; border-radius:6px; padding:7px 18px; box-shadow:0 1px 3px rgba(21,101,192,0.07);">Education <span class="dropdown-icon">▼</span></button>
-                    <div id="education-details" style="display:none; margin-left:22px;">
-                        <ul style="list-style-type: disc;">
-                            <li style="margin-bottom: 1em;"><strong>M.Sc. in Mathematics</strong><br>
-                                Indian Institute of Technology (IIT) Bombay, India<br>
-                                Jul 2022 – May 2024
-                            </li>
-                            <li style="margin-bottom: 1em;"><strong>B.Sc. in Mathematics</strong><br>
-                                Presidency University, Kolkata<br>
-                                Aug 2019 – Jun 2022
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div style="margin-left:30px;">
-                    <button onclick="toggleSection('achievements', this)" type="button" style="background:#e3f2fd; color:#1565c0; border:1px solid #90caf9; font-weight:bold; margin-bottom:8px; border-radius:6px; padding:7px 18px; box-shadow:0 1px 3px rgba(21,101,192,0.07);">Achievements <span class="dropdown-icon">▼</span></button>
-                    <div id="achievements" style="display:none; margin-left:22px;">
-                        <ul style="list-style-type: disc;">
-                            <li style="margin-bottom: 1em;"><strong>Dr. P. V. Sukhatme Memorial Award</strong><br>
-                                IIT Bombay (2024)
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="section">
-            <button onclick="toggleSection('work', this)">Work Experience <span class="dropdown-icon">▼</span></button>
-            <div id="work" style="display:none;">
-                <ul>
-                    <li><strong>Mathematics Analyst</strong> at Air India (Nov 2024 - Present)<br>Tester</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="section">
-            <button onclick="toggleSection('contact', this)">Contact <span class="dropdown-icon">▼</span></button>
-            <div id="contact" style="display:none;">
-                <ul>
-                    <li>
-                        <a href="https://www.linkedin.com/in/supriya-mandal-505a53271/" target="_blank" style="color:#0077b5; text-decoration:underline; font-weight:bold; display: flex; align-items: center; gap: 6px;">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn" style="width:22px; height:22px; vertical-align:middle;"> LinkedIn Profile
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="section">
-            <button onclick="toggleSection('feedback', this)">Upload Attachment / Leave a Comment <span class="dropdown-icon">▼</span></button>
-            <div id="feedback" style="display:none;">
-                <form id="feedbackForm" enctype="multipart/form-data" style="margin-top:15px; position:relative; padding-bottom:0;">
-                    <label for="attachment">Attach a file:</label><br>
-                    <input type="file" id="attachment" name="attachment"><br><br>
-                    <label for="comment">Your comment:</label><br>
-                    <textarea id="comment" name="comment" rows="4" cols="50" placeholder="Write your comment here..." style="width:100%;"></textarea><br>
-                    <div style="width:100%; display:flex; justify-content:flex-end; margin-top:6px;">
-                        <button type="submit" class="feedback-submit-btn">Submit</button>
-                    </div>
-                </form>
-                <div id="feedbackMessage" style="margin-top:10px; color:green;"></div>
+    <!-- Horizontal tab navigation between header and canvas -->
+    <nav id="canvas-top-nav" style="margin:0 auto 24px auto; display:flex; flex-direction:row; justify-content:center; align-items:stretch; background:#e3f2fd; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.10); overflow:hidden; width:100%; max-width:900px;">
+        <button class="canvas-nav-btn active" id="tab-home">Home</button>
+        <button class="canvas-nav-btn" id="tab-education">Education</button>
+        <button class="canvas-nav-btn" id="tab-achievements">Achievements</button>
+        <button class="canvas-nav-btn" id="tab-work">Work Experience</button>
+        <button class="canvas-nav-btn" id="tab-photos">Photos</button>
+        <button class="canvas-nav-btn" id="tab-hobbies">Hobbies</button>
+    </nav>
+    <!-- All interactive logic is now loaded from interactive.js -->
+    <div id="tab-content-home" class="tab-content" style="display:block;">
+        <div style="display:flex; flex-direction:column; align-items:center; margin-top:32px;">
+            <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/20250104_110808.jpg" alt="Supriya Mandal Profile" style="width:300px; height:300px; object-fit:cover; border-radius:50%; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
+            <h2 style="margin-bottom:12px; font-size:2.2em; margin-top:18px;">Supriya Mandal</h2>
+            <p style="font-size:1.35em; line-height:1.8; color:#245473; text-align:center; max-width:600px;">Hello! I'm Supriya Mandal, a passionate learner and explorer in mathematics, data analytics, and technology. I love solving problems, building creative projects, and sharing knowledge. Welcome to my portfolio!</p>
+            <div style="margin-top:32px; background:transparent; border-radius:10px; box-shadow:0 2px 8px rgba(21,101,192,0.10); padding:18px 0 0 0; max-width:420px; width:100%; text-align:center; color:#245473;">
+                <a href="https://www.linkedin.com/in/supriya-mandal-505a53271/" target="_blank" style="text-decoration:none; color:#1565c0;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#1565c0" style="vertical-align:middle;"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.838-1.563 3.036 0 3.597 2 3.597 4.594v5.602z"/></svg>
+                </a>
             </div>
         </div>
     </div>
-    <footer style="width:100%; background:#e3f2fd; color:#1565c0; padding:18px 0 12px 0; font-size:17px; font-weight:bold; letter-spacing:0.5px; margin-top:40px; border-top:1px solid #b3e5fc; display:flex; flex-direction:row; align-items:center; gap:8px; justify-content:center; position:relative;">
-        <div style="position:absolute; left:24px; bottom:12px; display:flex; flex-direction:column; align-items:flex-start;">
-            <span id="indian-datetime" style="font-size:15px; color:#245473; font-weight:normal;"></span>
-            <span id="utc-datetime" style="font-size:15px; color:#245473; font-weight:normal; margin-top:2px;"></span>
+<div id="tab-content-education" class="tab-content" style="display:none;">
+    <div style="margin:36px auto; max-width:600px;">
+        <h2 style="color:#245473; margin-bottom:18px;">Education</h2>
+        <ul style="font-size:1.18em; color:#245473; line-height:1.7; padding-left:22px;">
+            <li><strong>M.Sc. in Mathematics</strong><br>
+                Indian Institute of Technology (IIT) Bombay<br>
+                Jul 2022 – May 2024
+            </li>
+            <li style="margin-top:18px;"><strong>B.Sc. in Mathematics</strong><br>
+                Presidency University, Kolkata<br>
+                Aug 2019 – Jun 2022
+            </li>
+        </ul>
+    </div>
+</div>
+<div id="tab-content-achievements" class="tab-content" style="display:none;">
+    <div style="margin:36px auto; max-width:600px;">
+        <h2 style="color:#245473; margin-bottom:18px;">Achievements</h2>
+        <ul style="font-size:1.18em; color:#245473; line-height:1.7; padding-left:22px;">
+            <li><span style="font-size:1.2em;"></span> Awarded <strong>Dr. P. V. Sukhatme Memorial Award</strong> by IIT Bombay for the year 2023-2024, for securing 2nd Position in M.Sc. mathematics</li>
+            <li style="margin-top:14px;"><span style="font-size:1.2em;"></span> Secured AIR-830 in GATE Data Science and Artificial Intelligence, 2025 conducted by IIT roorkee</li>
+            <li style="margin-top:14px;"><span style="font-size:1.2em;"></span> Secured AIR-193 in GATE Mathematics, 2024 conducted by IISc</li>
+            <li style="margin-top:14px;"><span style="font-size:1.2em;"></span> Secured AIR-16 in IIT JAM, 2022 conducted by IIT Roorkee</li>
+        </ul>
+    </div>
+</div>
+    <div id="tab-content-work" class="tab-content" style="display:none;">
+        <div style="margin:36px auto; max-width:600px;">
+            <h2 style="color:#245473; margin-bottom:18px;">Work Experience</h2>
+            <ul style="font-size:1.18em; color:#245473; line-height:1.7; padding-left:22px;">
+                <li><strong>Graduate Engineer Trainee</strong><br>
+                    Air India Limited<br>
+                    (Nov 2024 - Present)
+                </li>
+            </ul>
         </div>
-        <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
-            <span>© 2025 Supriya Mandal  |  Welcome to my webpage!</span>
-            <a href="https://www.linkedin.com/in/supriya-mandal-505a53271/" target="_blank" style="display:inline-flex; align-items:center; gap:7px; color:#0077b5; text-decoration:none; font-weight:normal; font-size:16px;">
-                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn" style="width:22px; height:22px; vertical-align:middle;"> LinkedIn
-            </a>
+    </div>
+    <div id="tab-content-photos" class="tab-content" style="display:none;">
+        <div style="display:flex; flex-wrap:wrap; gap:18px; justify-content:center; margin:36px auto; max-width:900px;">
+            <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/20250104_110808.jpg" alt="Photo 1" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
+            <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/20250104_110808.jpg" alt="Photo 2" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
+            <!-- Add more <img> tags here if you add more images to sup_Gallary_for_web -->
+            <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/IMG_4770.JPG" alt="Photo 3" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
+            <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/20250104_110808.jpg" alt="Photo 4" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
         </div>
-        <div id="view-count-odometer" style="position:absolute; right:24px; bottom:12px; width:110px; height:38px;"></div>
+        <!-- Modal for zoomed image -->
+        <div id="photo-modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(36,84,115,0.85); z-index:2000; align-items:center; justify-content:center; flex-direction:column;">
+            <div id="photo-modal-content" style="position:relative; background:#fff; border-radius:16px; box-shadow:0 4px 24px rgba(21,101,192,0.18); padding:32px; display:flex; flex-direction:column; align-items:center; min-width:320px;">
+                <div id="photo-modal-controls" style="position:absolute; top:18px; right:18px; display:flex; gap:12px; z-index:10;">
+                    <button id="photo-zoom-in" title="Zoom In" style="background:#43c6ac; color:#fff; border:none; border-radius:50%; width:44px; height:44px; font-size:1.7em; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(21,101,192,0.13);">+</button>
+                    <button id="photo-zoom-out" title="Zoom Out" style="background:#43c6ac; color:#fff; border:none; border-radius:50%; width:44px; height:44px; font-size:1.7em; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(21,101,192,0.13);">-</button>
+                </div>
+                <img id="photo-modal-img" src="" alt="Zoomed Photo" style="max-width:80vw; max-height:70vh; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13); transition:transform 0.2s; margin-bottom:0;">
+            </div>
+            <div style="margin-top:32px; display:flex; justify-content:center; width:100%;">
+                <button id="photo-modal-close" style="background:#fde3ef; color:#245473; border:none; border-radius:6px; padding:16px 32px; font-size:1.35em; cursor:pointer;">Close ✕</button>
+            </div>
+        </div>
+    </div>
+<div id="tab-content-hobbies" class="tab-content" style="display:none;">
+    <div style="margin:36px auto; max-width:600px;">
+        <h2 style="color:#f7f8ed; margin-bottom:18px;">Hobbies</h2>
+        <ul style="font-size:1.18em; color:#d8e3ea; line-height:1.7; padding-left:22px;">
+            <li>Listening Music</li>
+            <li style="margin-top:12px;">Watching Cricket</li>
+            <li style="margin-top:12px;">Playing badminton</li>
+        </ul>
+    </div>
+</div>
+    <footer style="width:100%; background:#245473; color:#fff; text-align:center; padding:18px 0; font-size:1.25em; letter-spacing:1px; margin-top:40px; border-top:3px solid #43c6ac;">
+        Supriya Mandal ©2025
+        <a href="https://www.linkedin.com/in/supriya-mandal-505a53271/" target="_blank" style="margin-left:18px; vertical-align:middle; text-decoration:none; color:#fff;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="#fff" style="vertical-align:middle;"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.838-1.563 3.036 0 3.597 2 3.597 4.594v5.602z"/></svg>
+        </a>
     </footer>
     <script>
-        // Simple feedback form handler (no backend, just demo)
-        document.getElementById('feedbackForm').onsubmit = function(e) {
-            e.preventDefault();
-            document.getElementById('feedbackMessage').textContent = "Thank you for your feedback! (Note: File upload requires backend support.)";
-            this.reset();
-        };
-
-        // Show current Indian date and time in the footer (ensure script runs after footer exists)
-        function pad2(n) { return n < 10 ? '0' + n : n; }
-        function getDayShort(d) {
-            return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d];
-        }
-        function updateIndianDateTime() {
-            const now = new Date();
-            // Convert to IST (UTC+5:30)
-            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-            const istOffset = 5.5 * 60 * 60 * 1000;
-            const istTime = new Date(utc + istOffset);
-            // 24-hour format for IST with day
-            const istStr = `${getDayShort(istTime.getDay())}, ${istTime.getFullYear()}-${pad2(istTime.getMonth()+1)}-${pad2(istTime.getDate())} ` +
-                `${pad2(istTime.getHours())}:${pad2(istTime.getMinutes())}:${pad2(istTime.getSeconds())} IST`;
-            const dtElem = document.getElementById('indian-datetime');
-            if (dtElem) dtElem.textContent = istStr;
-            // 24-hour format for UTC with day
-            const utcStr = `${getDayShort(now.getUTCDay())}, ${now.getUTCFullYear()}-${pad2(now.getUTCMonth()+1)}-${pad2(now.getUTCDate())} ` +
-                `${pad2(now.getUTCHours())}:${pad2(now.getUTCMinutes())}:${pad2(now.getUTCSeconds())} UTC`;
-            const utcElem = document.getElementById('utc-datetime');
-            if (utcElem) utcElem.textContent = utcStr;
-        }
-        updateIndianDateTime();
-        setInterval(updateIndianDateTime, 1000);
-
-        // Odometer-style visitor count
-        function updateViewCount() {
-            let count = localStorage.getItem('supweb_view_count');
-            if (!count) count = 0;
-            count = parseInt(count) + 1;
-            localStorage.setItem('supweb_view_count', count);
-            drawOdometer(count);
-        }
-        function drawOdometer(count) {
-            var container = document.getElementById('view-count-odometer');
-            if (!container) return;
-            container.innerHTML = '';
-            // Format count as 6 digits with leading zeros
-            var str = count.toString().padStart(6, '0');
-            // SVG odometer
-            var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            svg.setAttribute('width', '110');
-            svg.setAttribute('height', '38');
-            // Background rectangle
-            var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            rect.setAttribute('x', '2');
-            rect.setAttribute('y', '2');
-            rect.setAttribute('width', '106');
-            rect.setAttribute('height', '34');
-            rect.setAttribute('rx', '7');
-            rect.setAttribute('fill', '#222');
-            rect.setAttribute('stroke', '#888');
-            rect.setAttribute('stroke-width', '2');
-            svg.appendChild(rect);
-            // Draw digit windows
-            for (let i = 0; i < 6; i++) {
-                let digitRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                digitRect.setAttribute('x', 6 + i * 16);
-                digitRect.setAttribute('y', 6);
-                digitRect.setAttribute('width', '14');
-                digitRect.setAttribute('height', '26');
-                digitRect.setAttribute('rx', '3');
-                digitRect.setAttribute('fill', '#fff');
-                digitRect.setAttribute('stroke', '#bbb');
-                digitRect.setAttribute('stroke-width', '1');
-                svg.appendChild(digitRect);
-                let digitText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                digitText.setAttribute('x', 13 + i * 16);
-                digitText.setAttribute('y', '25');
-                digitText.setAttribute('text-anchor', 'middle');
-                digitText.setAttribute('font-size', '18');
-                digitText.setAttribute('font-family', 'monospace');
-                digitText.setAttribute('fill', '#222');
-                digitText.setAttribute('font-weight', 'bold');
-                digitText.textContent = str[i];
-                svg.appendChild(digitText);
+    // Photo modal logic
+    document.addEventListener('DOMContentLoaded', function() {
+        const photoModalOverlay = document.getElementById('photo-modal-overlay');
+        const photoModalImg = document.getElementById('photo-modal-img');
+        const zoomInBtn = document.getElementById('photo-zoom-in');
+        const zoomOutBtn = document.getElementById('photo-zoom-out');
+        const closeBtn = document.getElementById('photo-modal-close');
+        let currentScale = 1;
+        // Open modal on photo click
+        document.querySelectorAll('#tab-content-photos img').forEach(function(img) {
+            img.style.cursor = 'pointer';
+            img.addEventListener('click', function() {
+                photoModalImg.src = img.src;
+                photoModalImg.alt = img.alt;
+                currentScale = 1;
+                photoModalImg.style.transform = 'scale(1)';
+                photoModalOverlay.style.display = 'flex';
+            });
+        });
+        // Zoom in
+        zoomInBtn.addEventListener('click', function() {
+            currentScale += 0.2;
+            if (currentScale > 3) currentScale = 3;
+            photoModalImg.style.transform = 'scale(' + currentScale + ')';
+        });
+        // Zoom out
+        zoomOutBtn.addEventListener('click', function() {
+            currentScale -= 0.2;
+            if (currentScale < 0.5) currentScale = 0.5;
+            photoModalImg.style.transform = 'scale(' + currentScale + ')';
+        });
+        // Close modal
+        closeBtn.addEventListener('click', function() {
+            photoModalOverlay.style.display = 'none';
+            photoModalImg.src = '';
+        });
+        // Also close modal when clicking outside content
+        photoModalOverlay.addEventListener('click', function(e) {
+            if (e.target === photoModalOverlay) {
+                photoModalOverlay.style.display = 'none';
+                photoModalImg.src = '';
             }
-            // Label
-            var label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            label.setAttribute('x', '55');
-            label.setAttribute('y', '37');
-            label.setAttribute('text-anchor', 'middle');
-            label.setAttribute('font-size', '10');
-            label.setAttribute('fill', '#245473');
-            label.textContent = 'Visitors';
-            svg.appendChild(label);
-            container.appendChild(svg);
-        }
-        updateViewCount();
-
-        // Enhanced analog clock in header (12-hour format, larger and more stylish)
-        function drawAnalogClock() {
-            var container = document.getElementById('analog-clock-container');
-            if (!container) return;
-            container.innerHTML = '';
-            var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            svg.setAttribute('width', '80');
-            svg.setAttribute('height', '80');
-            // Simple clock face: light border, white face, only 12, 3, 6, 9
-            var face = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            face.setAttribute('cx', '40');
-            face.setAttribute('cy', '40');
-            face.setAttribute('r', '36');
-            face.setAttribute('fill', '#fff');
-            face.setAttribute('stroke', '#245473');
-            face.setAttribute('stroke-width', '2');
-            svg.appendChild(face);
-            // Draw numbers only for 12, 3, 6, 9
-            var nums = ['12', '3', '6', '9'];
-            for (let i = 0; i < 4; i++) {
-                let angle = (i * 90) * Math.PI / 180;
-                let numX = 40 + 24 * Math.sin(angle);
-                let numY = 44 - 24 * Math.cos(angle);
-                let number = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                number.setAttribute('x', numX);
-                number.setAttribute('y', numY);
-                number.setAttribute('text-anchor', 'middle');
-                number.setAttribute('font-size', '14');
-                number.setAttribute('font-family', 'Arial, sans-serif');
-                number.setAttribute('fill', '#1565c0');
-                number.setAttribute('font-weight', 'bold');
-                number.textContent = nums[i];
-                svg.appendChild(number);
-            }
-            // Hour marks
-            for (let i = 0; i < 12; i++) {
-                let angle = (i * 30) * Math.PI / 180;
-                let x1 = 40 + 28 * Math.sin(angle);
-                let y1 = 40 - 28 * Math.cos(angle);
-                let x2 = 40 + 34 * Math.sin(angle);
-                let y2 = 40 - 34 * Math.cos(angle);
-                let mark = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                mark.setAttribute('x1', x1);
-                mark.setAttribute('y1', y1);
-                mark.setAttribute('x2', x2);
-                mark.setAttribute('y2', y2);
-                mark.setAttribute('stroke', '#245473');
-                mark.setAttribute('stroke-width', i % 3 === 0 ? '3' : '1.5');
-                svg.appendChild(mark);
-            }
-            // Get current time
-            var now = new Date();
-            var hour = now.getHours() % 12;
-            var min = now.getMinutes();
-            var sec = now.getSeconds();
-            // Hour hand
-            var hourAngle = ((hour + min / 60) * 30) * Math.PI / 180;
-            var hourX = 40 + 18 * Math.sin(hourAngle);
-            var hourY = 40 - 18 * Math.cos(hourAngle);
-            var hourHand = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            hourHand.setAttribute('x1', '40');
-            hourHand.setAttribute('y1', '40');
-            hourHand.setAttribute('x2', hourX);
-            hourHand.setAttribute('y2', hourY);
-            hourHand.setAttribute('stroke', '#388e3c');
-            hourHand.setAttribute('stroke-width', '4');
-            hourHand.setAttribute('stroke-linecap', 'round');
-            svg.appendChild(hourHand);
-            // Minute hand
-            var minAngle = ((min + sec / 60) * 6) * Math.PI / 180;
-            var minX = 40 + 26 * Math.sin(minAngle);
-            var minY = 40 - 26 * Math.cos(minAngle);
-            var minHand = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            minHand.setAttribute('x1', '40');
-            minHand.setAttribute('y1', '40');
-            minHand.setAttribute('x2', minX);
-            minHand.setAttribute('y2', minY);
-            minHand.setAttribute('stroke', '#007bff');
-            minHand.setAttribute('stroke-width', '3');
-            minHand.setAttribute('stroke-linecap', 'round');
-            svg.appendChild(minHand);
-            // Second hand
-            var secAngle = (sec * 6) * Math.PI / 180;
-            var secX = 40 + 30 * Math.sin(secAngle);
-            var secY = 40 - 30 * Math.cos(secAngle);
-            var secHand = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            secHand.setAttribute('x1', '40');
-            secHand.setAttribute('y1', '40');
-            secHand.setAttribute('x2', secX);
-            secHand.setAttribute('y2', secY);
-            secHand.setAttribute('stroke', '#d32f2f');
-            secHand.setAttribute('stroke-width', '2');
-            secHand.setAttribute('stroke-linecap', 'round');
-            svg.appendChild(secHand);
-            // Center dot
-            var center = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            center.setAttribute('cx', '40');
-            center.setAttribute('cy', '40');
-            center.setAttribute('r', '3');
-            center.setAttribute('fill', '#245473');
-            svg.appendChild(center);
-            container.appendChild(svg);
-        }
-        drawAnalogClock();
-        setInterval(drawAnalogClock, 1000);
-
-        // Day/Night SVG in header (left side) based on IST
-        function drawHeaderSkyIcon() {
-            var container = document.getElementById('header-sky-svg');
-            if (!container) return;
-            container.innerHTML = '';
-            // Get IST hour
-            const now = new Date();
-            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-            const istOffset = 5.5 * 60 * 60 * 1000;
-            const ist = new Date(utc + istOffset);
-            const hour = ist.getHours();
-            var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            svg.setAttribute('width', '90');
-            svg.setAttribute('height', '90');
-            if (hour >= 6 && hour < 18) {
-                // Day: slightly smaller sun + clouds
-                var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-                var radialGradient = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient');
-                radialGradient.setAttribute('id', 'sunGradient');
-                var stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-                stop1.setAttribute('offset', '0%');
-                stop1.setAttribute('stop-color', '#fffde4');
-                var stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-                stop2.setAttribute('offset', '80%');
-                stop2.setAttribute('stop-color', '#ffe066');
-                var stop3 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-                stop3.setAttribute('offset', '100%');
-                stop3.setAttribute('stop-color', '#ffd700');
-                radialGradient.appendChild(stop1);
-                radialGradient.appendChild(stop2);
-                radialGradient.appendChild(stop3);
-                defs.appendChild(radialGradient);
-                svg.appendChild(defs);
-                var sun = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                sun.setAttribute('cx', '34');
-                sun.setAttribute('cy', '45');
-                sun.setAttribute('r', '22'); // Reduced radius
-                sun.setAttribute('fill', 'url(#sunGradient)');
-                sun.setAttribute('stroke', '#ffd700');
-                sun.setAttribute('stroke-width', '2');
-                svg.appendChild(sun);
-                // Sun rays
-                for (let i = 0; i < 12; i++) {
-                    let angle = (i * 30) * Math.PI / 180;
-                    let x1 = 34 + 25 * Math.cos(angle);
-                    let y1 = 45 + 25 * Math.sin(angle);
-                    let x2 = 34 + 34 * Math.cos(angle);
-                    let y2 = 45 + 34 * Math.sin(angle);
-                    let ray = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                    ray.setAttribute('x1', x1);
-                    ray.setAttribute('y1', y1);
-                    ray.setAttribute('x2', x2);
-                    ray.setAttribute('y2', y2);
-                    ray.setAttribute('stroke', '#ffe066');
-                    ray.setAttribute('stroke-width', '1.7');
-                    ray.setAttribute('opacity', '0.7');
-                    svg.appendChild(ray);
-                }
-                // Clouds
-                function drawCloud(cx, cy, scale) {
-                    let cloudParts = [
-                        {rx: 14*scale, ry: 9*scale, dx: 0, dy: 0},
-                        {rx: 9*scale, ry: 9*scale, dx: -11*scale, dy: 2*scale},
-                        {rx: 8*scale, ry: 8*scale, dx: 11*scale, dy: 2*scale},
-                        {rx: 7*scale, ry: 7*scale, dx: 6*scale, dy: -6*scale}
-                    ];
-                    cloudParts.forEach(part => {
-                        let e = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-                        e.setAttribute('cx', cx + part.dx);
-                        e.setAttribute('cy', cy + part.dy);
-                        e.setAttribute('rx', part.rx);
-                        e.setAttribute('ry', part.ry);
-                        e.setAttribute('fill', '#fff');
-                        e.setAttribute('opacity', '0.85');
-                        svg.appendChild(e);
-                    });
-                }
-                drawCloud(66, 60, 0.9);
-                drawCloud(78, 42, 0.65);
-            } else {
-                // Night: slightly smaller moon + stars
-                var moon = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                moon.setAttribute('cx', '34');
-                moon.setAttribute('cy', '45');
-                moon.setAttribute('r', '18'); // Reduced radius
-                moon.setAttribute('fill', '#fffde4');
-                moon.setAttribute('stroke', '#e0e0e0');
-                moon.setAttribute('stroke-width', '1.5');
-                svg.appendChild(moon);
-                var crescent = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-                crescent.setAttribute('cx', '40');
-                crescent.setAttribute('cy', '45');
-                crescent.setAttribute('rx', '15');
-                crescent.setAttribute('ry', '16');
-                crescent.setAttribute('fill', '#21243a');
-                svg.appendChild(crescent);
-                // Stars
-                for (let i = 0; i < 12; i++) {
-                    let star = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                    let r = Math.random() * 1.7 + 0.5;
-                    let cx = 60 + Math.random() * 22;
-                    let cy = 22 + Math.random() * 44;
-                    star.setAttribute('cx', cx);
-                    star.setAttribute('cy', cy);
-                    star.setAttribute('r', r);
-                    star.setAttribute('fill', '#fff');
-                    star.setAttribute('opacity', Math.random() * 0.6 + 0.4);
-                    svg.appendChild(star);
-                    // Some stars as crosses
-                    if (Math.random() > 0.7) {
-                        let cross1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                        cross1.setAttribute('x1', cx - r);
-                        cross1.setAttribute('y1', cy);
-                        cross1.setAttribute('x2', cx + r);
-                        cross1.setAttribute('y2', cy);
-                        cross1.setAttribute('stroke', '#fff');
-                        cross1.setAttribute('stroke-width', '0.7');
-                        cross1.setAttribute('opacity', '0.7');
-                        svg.appendChild(cross1);
-                        let cross2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                        cross2.setAttribute('x1', cx);
-                        cross2.setAttribute('y1', cy - r);
-                        cross2.setAttribute('x2', cx);
-                        cross2.setAttribute('y2', cy + r);
-                        cross2.setAttribute('stroke', '#fff');
-                        cross2.setAttribute('stroke-width', '0.7');
-                        cross2.setAttribute('opacity', '0.7');
-                        svg.appendChild(cross2);
-                    }
-                }
-            }
-            container.appendChild(svg);
-        }
-        drawHeaderSkyIcon();
-        setInterval(drawHeaderSkyIcon, 60000);
+        });
+    });
     </script>
 </body>
 </html>
-
-
