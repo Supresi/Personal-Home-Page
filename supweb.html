@@ -13,7 +13,7 @@
         }
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #245473 0%, #43c6ac 100%);
+            background: linear-gradient(135deg, #b3afde 0%, #d6f7dd 100%);
             margin: 0;
             padding: 0;
         }
@@ -94,16 +94,17 @@
             max-width: 900px;
             margin-left: auto;
             margin-right: auto;
+            border: 2px solid #245473;
         }
         .canvas-nav-btn {
             flex: 1 1 0;
             min-width: 140px;
-            background: #F2B872;
+            background: #0efae6;
             color: #245473;
             border: none;
-            border-right: 1.5px solid #b3e5fc;
+            border-right: 1.5px solid #e6edf0;
             font-size: 17px;
-            font-weight: bold;
+            font-weight: 700;
             padding: 22px 0;
             cursor: pointer;
             transition: background 0.2s, color 0.2s;
@@ -137,7 +138,7 @@
             position:relative;
             z-index: 1;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
         }
         #analog-clock-container {
@@ -277,16 +278,16 @@
         }
         .canvas-datetime {
             position: absolute;
-            top: 18px;
             right: 32px;
+            bottom: 10px;
             display: flex;
             flex-direction: column;
             align-items: flex-end;
             z-index: 10;
         }
         .canvas-datetime span {
-            font-size: 15px;
-            color: #245473;
+            font-size: 17px;
+            color: #fff;
             font-weight: normal;
         }
     </style>
@@ -317,18 +318,36 @@
 <body>
     <header style="display: flex; align-items: center; justify-content: space-between; position:relative;">
         <span id="header-sky-svg" style="width:100px; height:80px; display:flex; align-items:center;"></span>
-        <div style="flex-grow:1; display:flex; justify-content:center; align-items:center; position:relative;">
-            <span style="position:absolute; left:0; right:0; margin:auto; text-align:center; font-size:2.1rem; font-weight:bold; color:#f8fafc; width:100%;">Welcome to Supriya Mandal's Portfolio</span>
+        <div style="flex:1; display:flex; justify-content:center; align-items:center; position:relative; min-width:0;">
+            <span style="display:block; width:100%; text-align:center; font-size:2.1rem; font-weight:bold; color:#f8fafc;">Welcome to Supriya Mandal's Portfolio</span>
         </div>
-        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
-            <span id="header-utc" style="font-size:0.42em; color:#fff; font-weight:normal; text-align:left;">UTC: --:--</span>
-            <span id="header-ist" style="font-size:0.42em; color:#fff; font-weight:normal; text-align:left;">IST: --:--</span>
-            <span id="analog-clock-container"></span>
+        <span id="analog-clock-container"></span>
+        <div class="canvas-datetime">
+            <span id="header-utc" style="font-size:0.42em; color:#fff; font-weight:normal; text-align:left; display:flex; align-items:center; gap:4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 32 32" style="vertical-align:middle;">
+                  <circle cx="16" cy="16" r="15" fill="#fff" stroke="#245473" stroke-width="2"/>
+                  <circle cx="16" cy="16" r="12" fill="#e3f2fd" stroke="#245473" stroke-width="1.5"/>
+                  <line x1="16" y1="16" x2="16" y2="8" stroke="#245473" stroke-width="2.2" stroke-linecap="round"/>
+                  <line x1="16" y1="16" x2="22" y2="16" stroke="#43c6ac" stroke-width="2" stroke-linecap="round"/>
+                  <circle cx="16" cy="16" r="2.1" fill="#43c6ac"/>
+                </svg>
+                <span id="header-utc-text">UTC: --:--</span>
+            </span>
+            <span id="header-local" style="font-size:0.42em; color:#fff; font-weight:normal; text-align:left; display:flex; align-items:center; gap:4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 32 32" style="vertical-align:middle;">
+                  <circle cx="16" cy="16" r="15" fill="#fff" stroke="#245473" stroke-width="2"/>
+                  <circle cx="16" cy="16" r="12" fill="#e3f2fd" stroke="#245473" stroke-width="1.5"/>
+                  <line x1="16" y1="16" x2="16" y2="8" stroke="#245473" stroke-width="2.2" stroke-linecap="round"/>
+                  <line x1="16" y1="16" x2="22" y2="16" stroke="#43c6ac" stroke-width="2" stroke-linecap="round"/>
+                  <circle cx="16" cy="16" r="2.1" fill="#43c6ac"/>
+                </svg>
+                <span id="header-local-text">Local: --:--</span>
+            </span>
         </div>
     <script>
         function updateHeaderTimes() {
-            const utcElem = document.getElementById('header-utc');
-            const istElem = document.getElementById('header-ist');
+            const utcTextElem = document.getElementById('header-utc-text');
+            const localTextElem = document.getElementById('header-local-text');
             const now = new Date();
             // Days array
             const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -338,15 +357,21 @@
             const utcHours = now.getUTCHours().toString().padStart(2, '0');
             const utcMinutes = now.getUTCMinutes().toString().padStart(2, '0');
             const utcSeconds = now.getUTCSeconds().toString().padStart(2, '0');
-            utcElem.textContent = `UTC: ${utcDay}, ${utcDate} ${utcHours}:${utcMinutes}:${utcSeconds}`;
-            // IST (UTC+5:30)
-            let ist = new Date(now.getTime() + (5.5 * 60 * 60 * 1000));
-            const istDay = days[ist.getUTCDay()];
-            const istDate = ist.getUTCFullYear() + '-' + (ist.getUTCMonth()+1).toString().padStart(2,'0') + '-' + ist.getUTCDate().toString().padStart(2,'0');
-            const istHours = ist.getUTCHours().toString().padStart(2, '0');
-            const istMinutes = ist.getUTCMinutes().toString().padStart(2, '0');
-            const istSeconds = ist.getUTCSeconds().toString().padStart(2, '0');
-            istElem.textContent = `IST: ${istDay}, ${istDate} ${istHours}:${istMinutes}:${istSeconds}`;
+            utcTextElem.textContent = `UTC: ${utcDay}, ${utcDate} ${utcHours}:${utcMinutes}:${utcSeconds}`;
+            // Local Time
+            const localDay = days[now.getDay()];
+            const localDate = now.getFullYear() + '-' + (now.getMonth()+1).toString().padStart(2,'0') + '-' + now.getDate().toString().padStart(2,'0');
+            const localHours = now.getHours().toString().padStart(2, '0');
+            const localMinutes = now.getMinutes().toString().padStart(2, '0');
+            const localSeconds = now.getSeconds().toString().padStart(2, '0');
+            // Get local timezone abbreviation
+            let tz = '';
+            try {
+                tz = Intl.DateTimeFormat('en', {timeZoneName:'short'}).formatToParts(now).find(x=>x.type==='timeZoneName').value;
+            } catch(e) {
+                tz = '';
+            }
+            localTextElem.textContent = `Local (${tz}): ${localDay}, ${localDate} ${localHours}:${localMinutes}:${localSeconds}`;
         }
         setInterval(updateHeaderTimes, 1000);
         window.addEventListener('DOMContentLoaded', updateHeaderTimes);
@@ -367,9 +392,14 @@
         <div style="display:flex; flex-direction:column; align-items:center; margin-top:32px;">
             <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/20250104_110808.jpg" alt="Supriya Mandal Profile" style="width:300px; height:300px; object-fit:cover; border-radius:50%; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
             <h2 style="margin-bottom:12px; font-size:1.8em; margin-top:18px;">Supriya Mandal</h2>
-            <p style="font-size:1.35em; line-height:1.8; color:#245473; text-align:center; max-width:900px;">Hello! I'm Supriya Mandal, a passionate learner and explorer in mathematics, data analytics, and technology. I love solving problems, building creative projects, and sharing knowledge. Currently working as Graduate Engineer Trainee at Air India, responsible for Quality Assurance. Welcome to my portfolio!</p>
-            <div style="margin-top:32px; background:transparent; border-radius:10px; box-shadow:0 2px 8px rgba(21,101,192,0.10); padding:18px 0 0 0; max-width:420px; width:100%; text-align:center; color:#245473;">
-                <a href="https://www.linkedin.com/in/supriya-mandal-505a53271/" target="_blank" style="text-decoration:none; color:#1565c0;">
+            <hr style="width:60%; border:0; border-top:1px solid #242421; margin:0 auto 18px auto;">
+            <p style="font-size:1.35em; line-height:1.5; color:#142001; text-align:center; max-width:900px;">Hi, I’m Supriya Mandal, a Mathematics graduate from Presidency University, Kolkata and a postgraduate from IIT Bombay. I’m currently working as a Graduate Engineer Trainee at AI Limited, where I apply my analytical and problem-solving skills to real-world projects.</p>
+            <p style="font-size:1.35em; line-height:1.5; color:#10011e; text-align:center; max-width:900px; margin-top:0;">With a strong academic foundation in mathematics and a passion for data science, I specialize in Python and SQL to analyze data, uncover patterns, and create data-driven solutions. My goal is to combine mathematical reasoning with technology to deliver meaningful insights and innovative results.</p>
+            <p style="font-size:1.35em; line-height:1.5; color:#091b00; text-align:center; max-width:900px; margin-top:0;">Welcome to my portfolio!</p>
+            <hr style="width:60%; border:0; border-top:1px solid #0d110b; margin:18px auto 0 auto;">
+            <div style="margin-top:32px; text-align:center;">
+                <span style="font-size:1.45em; color:#245473; font-weight:600; margin-bottom:6px; display:block;">Contact Details</span>
+                <a href="https://www.linkedin.com/in/supriya-mandal-505a53271/" target="_blank" style="text-decoration:none; color:#1565c0; display:inline-flex; justify-content:center; align-items:center;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#1565c0" style="vertical-align:middle;"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.838-1.563 3.036 0 3.597 2 3.597 4.594v5.602z"/></svg>
                 </a>
             </div>
@@ -377,15 +407,17 @@
     </div>
 <div id="tab-content-education" class="tab-content" style="display:none;">
     <div style="margin:36px auto; max-width:600px;">
-        <h2 style="color:#245473; margin-bottom:18px;">Education</h2>
-        <ul style="font-size:1.18em; color:#245473; line-height:1.7; padding-left:22px;">
-            <li><strong>M.Sc. in Mathematics</strong><br>
-                Indian Institute of Technology (IIT) Bombay<br>
-                Jul 2022 – May 2024
+        <h2 style="color:#091106; margin-bottom:18px;">Education</h2>
+        <ul style="font-size:1.18em; color:#cfe9d4; line-height:1.7; padding-left:22px;">
+            <li>
+                <strong style="color:#0a0001;">M.Sc. in Mathematics</strong><br>
+                <span style="color:#0a0001;">Indian Institute of Technology (IIT) Bombay</span><br>
+                <span style="color:#0a0001;">Jul 2022 – May 2024</span>
             </li>
-            <li style="margin-top:18px;"><strong>B.Sc. in Mathematics</strong><br>
-                Presidency University, Kolkata<br>
-                Aug 2019 – Jun 2022
+            <li style="margin-top:18px;">
+                <strong style="color:#0a0001;">B.Sc. in Mathematics</strong><br>
+                <span style="color:#0a0001;">Presidency University, Kolkata</span><br>
+                <span style="color:#0a0001;">Aug 2019 – Jun 2022</span>
             </li>
         </ul>
     </div>
@@ -405,8 +437,8 @@
         <div style="margin:36px auto; max-width:600px;">
             <h2 style="color:#245473; margin-bottom:18px;">Work Experience</h2>
             <ul style="font-size:1.18em; color:#245473; line-height:1.7; padding-left:22px;">
-                <li><strong>Graduate Engineer Trainee</strong><br>
-                    Air India Limited<br>
+                <li>Graduate Engineer Trainee<br>
+                    <strong>Air India Limited</strong><br>
                     (Nov 2024 - Present)
                 </li>
             </ul>
@@ -414,11 +446,23 @@
     </div>
     <div id="tab-content-photos" class="tab-content" style="display:none;">
         <div style="display:flex; flex-wrap:wrap; gap:18px; justify-content:center; margin:36px auto; max-width:900px;">
-            <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/20250104_110808.jpg" alt="Photo 1" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
-            <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/IMG_1214.JPG" alt="Photo 2" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
+            <div style="display:flex; flex-direction:column; align-items:center; width:320px;">
+                <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/20250104_110808.jpg" alt="Photo 1" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
+                <div style="margin-top:8px; font-size:1.08em; color:#010b12; text-align:center;">Shimla Trip(Jan'25)</div>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; width:320px;">
+                <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/IMG_1214.JPG" alt="Photo 2" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
+                <div style="margin-top:8px; font-size:1.08em; color:#232B2B; text-align:center;">Convocation'24</div>
+            </div>
             <!-- Add more <img> tags here if you add more images to sup_Gallary_for_web -->
-            <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/IMG_4770.JPG" alt="Photo 3" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
-            <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/20250104_110808.jpg" alt="Photo 4" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
+            <div style="display:flex; flex-direction:column; align-items:center; width:320px;">
+                <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/IMG_4770.JPG" alt="Photo 3" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
+                <div style="margin-top:8px; font-size:1.08em; color:#245473; text-align:center;">Shimla Trip(Jan'25)</div>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; width:320px;">
+                <img src="https://raw.githubusercontent.com/Supresi/Personal-Home-Page/main/20250104_110808.jpg" alt="Photo 4" style="width:320px; height:320px; object-fit:cover; border-radius:12px; box-shadow:0 2px 8px rgba(21,101,192,0.13);">
+                <div style="margin-top:8px; font-size:1.08em; color:#030a0f; text-align:center;">Shimla Trip(Jan'25)</div>
+            </div>
         </div>
         <!-- Modal for zoomed image -->
         <div id="photo-modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(36,84,115,0.85); z-index:2000; align-items:center; justify-content:center; flex-direction:column;">
@@ -436,7 +480,7 @@
     </div>
 <div id="tab-content-hobbies" class="tab-content" style="display:none;">
     <div style="margin:36px auto; max-width:600px;">
-        <h2 style="color:#f7f8ed; margin-bottom:18px;">Hobbies</h2>
+        <h2 style="color:#16170f; margin-bottom:18px;">Hobbies</h2>
         <ul style="font-size:1.18em; color:#d8e3ea; line-height:1.7; padding-left:22px;">
             <li>Listening Music</li>
             <li style="margin-top:12px;">Watching Cricket</li>
